@@ -36,7 +36,6 @@ const AnonymityForm = () => {
     formData.append('l', values.lValue || '');
     formData.append('t', values.tValue || '');
     formData.append('m', values.mValue || '');
-    formData.append('e', values.eValue || '');
     formData.append('quasi_identifiers', quasiIdentifiers.join(','));
   
     // 将 hierarchyRules 转换为 JSON 字符串并传递
@@ -90,7 +89,6 @@ const AnonymityForm = () => {
               <Option value="l-diversity">L-diversity</Option>
               <Option value="t-closeness">T-closeness</Option>
               <Option value="km-anonymity">Km-anonymity</Option>
-              <Option value="differential_privacy">Differential Privacy</Option>
             </Select>
           </Form.Item>
 
@@ -132,18 +130,7 @@ const AnonymityForm = () => {
                 label="M-value"
                 rules={[{ required: algorithm === 'km-anonymity', message: 'Please input the M-value!' }]}
               >
-                <InputNumber min={1} style={{ width: '100%' }} placeholder="Enter M-value (2-5)" />
-              </Form.Item>
-            </>
-          )}
-          {algorithm === 'differential_privacy' && (
-            <>
-              <Form.Item
-                name="eValue"
-                label="Epsilon-value"
-                rules={[{ required: algorithm === 'differential_privacy', message: 'Please input the Epsilon-value' }]}
-              >
-                <InputNumber min={1} style={{ width: '100%' }} placeholder="Please input the Epsilon-value!" />
+                <InputNumber min={0.01} max={1} step={0.01} style={{ width: '100%' }} placeholder="Enter M-value" />
               </Form.Item>
             </>
           )}

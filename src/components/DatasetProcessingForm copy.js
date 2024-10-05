@@ -1,3 +1,4 @@
+// DatasetProcessingForm.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Form, Button, Select, Checkbox, Typography, Upload, message } from 'antd';
@@ -32,33 +33,23 @@ const DatasetProcessingForm = () => {
     setUploadedFile(file);
     const reader = new FileReader();
     reader.onload = (event) => {
-      let csvText = event.target.result;
-
-      // Detect file type based on extension
-      const isTsv = file.name.endsWith('.tsv');
-      if (isTsv) {
-        // Convert TSV to CSV by replacing tabs with commas
-        csvText = csvText.replace(/\t/g, ',');
-        message.info('TSV file converted to CSV format.');
-      }
-
+      const csvText = event.target.result;
       Papa.parse(csvText, {
         header: true,
         skipEmptyLines: true,
-        delimiter: ',', // Use comma for parsing as it's now CSV format
         complete: (result) => {
           setCsvData(result.data);
           setCsvHeaders(result.meta.fields);
-          message.success(`${isTsv ? 'Converted TSV' : 'CSV'} file uploaded and parsed successfully!`);
+          message.success('CSV file uploaded and parsed successfully!');
         },
         error: (error) => {
-          message.error('Error parsing the file');
+          message.error('Error parsing CSV file');
           console.error(error);
         }
       });
     };
     reader.readAsText(file);
-    return false; // Prevent default upload behavior
+    return false;
   };
 
   return (
@@ -80,15 +71,15 @@ const DatasetProcessingForm = () => {
           >
             <Form.Item
               name="csvUpload"
-              label="Upload CSV or TSV"
-              rules={[{ required: true, message: 'Please upload a CSV or TSV file!' }]}
+              label="Upload CSV"
+              rules={[{ required: true, message: 'Please upload a CSV file!' }]}
             >
               <Upload
                 beforeUpload={handleUpload}
-                accept=".csv,.tsv" // Accept both CSV and TSV file types
+                accept=".csv"
                 showUploadList={false}
               >
-                <Button icon={<UploadOutlined />}>Click to Upload CSV/TSV</Button>
+                <Button icon={<UploadOutlined />}>Click to Upload CSV</Button>
               </Upload>
             </Form.Item>
 
