@@ -39,6 +39,7 @@ const HierarchyForm = () => {
               <Select placeholder={`Select method for ${header}`}>
                 <Option value="ordering">Ordering</Option>
                 <Option value="masking">Masking</Option>
+                <Option value="category">Category</Option>
                 <Option value="dates">Dates</Option>
                 {/* 其他选项 */}
               </Select>
