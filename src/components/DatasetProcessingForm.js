@@ -9,12 +9,12 @@ const { Option } = Select;
 const { Title, Text, Link } = Typography;
 const { Content } = Layout;
 
-const DatasetProcessingForm = () => {
+const DatasetProcessingForm = ({setFile,file}) => {
   const [form] = Form.useForm();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [csvData, setCsvData] = useState([]);
   const [csvHeaders, setCsvHeaders] = useState([]);
-  const [uploadedFile, setUploadedFile] = useState(null);
+  // const [uploadedFile, setUploadedFile] = useState(null);
   const navigate = useNavigate();
 
   const handleTermsChange = (e) => {
@@ -25,17 +25,17 @@ const DatasetProcessingForm = () => {
     console.log('Form values:', values);
     console.log('CSV Data:', csvData);
     console.log('CSV Headers:', csvHeaders);
-    navigate('/hierarchy', { state: { quasiIdentifiers: values.quasiIdentifier, file: uploadedFile, sensitiveColumn: values.sensitiveAttribute[0] } });
+    navigate('/hierarchy', { state: { identifier:values.identifier, quasiIdentifiers: values.quasiIdentifier, sensitiveColumn: values.sensitiveAttribute[0] } });
   };
 
-  const handleUpload = (file) => {
-    setUploadedFile(file);
+  const handleUpload = (upFile) => {
+    setFile(upFile)
     const reader = new FileReader();
     reader.onload = (event) => {
       let csvText = event.target.result;
 
       // Detect file type based on extension
-      const isTsv = file.name.endsWith('.tsv');
+      const isTsv = upFile.name.endsWith('.tsv');
       if (isTsv) {
         // Convert TSV to CSV by replacing tabs with commas
         csvText = csvText.replace(/\t/g, ',');
@@ -57,13 +57,13 @@ const DatasetProcessingForm = () => {
         }
       });
     };
-    reader.readAsText(file);
+    reader.readAsText(upFile);
     return false; // Prevent default upload behavior
   };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <AppHeader /> {/* 使用头部组件 */}
+      <AppHeader /> 
       <Content style={{ padding: '50px', backgroundColor: '#f0f2f5' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <Title level={1}>Privacy Enhancement Toolbox</Title>
@@ -71,7 +71,7 @@ const DatasetProcessingForm = () => {
         </div>
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
           <Title level={3}>Dataset Processing</Title>
-          <Text type="secondary">Subheading</Text>
+          {/* <Text type="secondary">Subheading</Text> */}
           <Form
             form={form}
             layout="vertical"
@@ -92,7 +92,7 @@ const DatasetProcessingForm = () => {
               </Upload>
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               name="missedValue"
               label="Missed Value"
               rules={[{ required: true, message: 'Please select a missed value handling method!' }]}
@@ -102,7 +102,7 @@ const DatasetProcessingForm = () => {
                 <Option value="mean">Replace with Mean</Option>
                 <Option value="median">Replace with Median</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               name="identifier"

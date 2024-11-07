@@ -26,7 +26,7 @@ const DatasetProcessingForm = () => {
     console.log('Form values:', values);
     console.log('CSV Data:', csvData);
     console.log('CSV Headers:', csvHeaders);
-    navigate('/hierarchy', { state: { quasiIdentifiers: values.quasiIdentifier, file: uploadedFile, sensitiveColumn: values.sensitiveAttribute[0] } });
+    navigate('/hierarchy', { state: { identifier:values.identifier, quasiIdentifiers: values.quasiIdentifier, file: uploadedFile, sensitiveColumn: values.sensitiveAttribute[0] } });
   };
 
   const handleUpload = (file) => {

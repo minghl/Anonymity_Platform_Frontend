@@ -1,26 +1,17 @@
-// import React, { useState, useEffect } from 'react';
-// import { useLocation } from 'react-router-dom';
-import { Layout, Form, Select, InputNumber, Button, Typography, Checkbox, message } from 'antd';
-import AppHeader from './Header';  // Import the Header component
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Layout, Form, Select, InputNumber, Button, Typography, Checkbox, message } from 'antd';
+import AppHeader from './Header';  // Import the Header component
+
 const { Option } = Select;
 const { Title, Text, Link } = Typography;
 const { Content } = Layout;
 
-const AnonymityForm = ({file}) => {
+const AnonymityForm = () => {
   const [algorithm, setAlgorithm] = useState('k-anonymity');
   const location = useLocation();
-  const { identifier, quasiIdentifiers, sensitiveColumn, hierarchyRules } = location.state || { identifier: '', quasiIdentifiers: [], file: null, sensitiveColumn: '', hierarchyRules: {} };
-  // const fileRef = useRef(initialFile);
-  // 将 file 存储在 state 中，以便多次提交时可以访问
-  // const [file, setFile] = useState(initialFile);
-
-  // // 确保每次页面加载时初始化 file 状态
-  // useEffect(() => {
-  //   setFile(initialFile);
-  // }, [initialFile]);
-
+  const {identifier, quasiIdentifiers, file, sensitiveColumn, hierarchyRules } = location.state || {identifier:'', quasiIdentifiers: [], file: null, sensitiveColumn: '', hierarchyRules: {} };
+  
   const onAlgorithmChange = (value) => {
     setAlgorithm(value);
   };
@@ -37,7 +28,7 @@ const AnonymityForm = ({file}) => {
 
   const onFinish = async (values) => {
     const formData = new FormData();
-    
+  
     formData.append('file', file);
     formData.append('sensitive_column', sensitiveColumn);
     formData.append('identifier', identifier);
@@ -50,6 +41,8 @@ const AnonymityForm = ({file}) => {
     formData.append('suppression_threshold', values.supRate || '');
     formData.append('quasi_identifiers', quasiIdentifiers.join(','));
     
+  
+    // 将 hierarchyRules 转换为 JSON 字符串并传递
     formData.append('hierarchy_rules', JSON.stringify(hierarchyRules));
   
     try {
@@ -62,6 +55,7 @@ const AnonymityForm = ({file}) => {
         const result = await response.json();
         console.log('Anonymized Data:', result);
   
+        // Convert the result to CSV format
         const header = Object.keys(result[0]).join(',') + '\n';
         const rows = result.map(row => Object.values(row).join(',')).join('\n');
         const csvData = header + rows;
@@ -70,23 +64,22 @@ const AnonymityForm = ({file}) => {
         message.success('Data anonymization successful! CSV downloaded.');
       } else {
         const error = await response.json();
-        console.error(`Server Error: ${error.error}`);
         message.error(`Error: ${error.error}`);
       }
     } catch (error) {
-      console.error('Network Error during data anonymization:', error);
-      message.error('A network error occurred while processing the data. Please check your connection and try again.');
+      console.error('Error during data anonymization:', error);
+      message.error('An error occurred while processing the data.');
     }
   };
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <AppHeader /> {/* Include the Header component */}
       <Content style={{ maxWidth: 600, margin: '0 auto', padding: '20px' }}>
         <Title level={3}>Manual Dataset Anonymity</Title>
-        {/* <Text type="secondary">Subheading</Text> */}
+        <Text type="secondary">Subheading</Text>
         <Form
           layout="vertical"
-          // onFinish={onFinish}
           onFinish={onFinish}
           style={{ marginTop: '20px' }}
         >
@@ -164,10 +157,10 @@ const AnonymityForm = ({file}) => {
             >
               <InputNumber min={0} max={1} step={0.01}style={{ width: '100%' }} placeholder="Enter suppression rate" />
             </Form.Item>
-          {/* <Form.Item>
+          <Form.Item>
             <Checkbox>I accept the terms</Checkbox>
             <Link href="#" target="_blank">Read our T&Cs</Link>
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
