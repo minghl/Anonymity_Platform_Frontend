@@ -6,7 +6,7 @@ import Papa from 'papaparse';
 import AppHeader from './Header'; // 导入头部组件
 
 const { Option } = Select;
-const { Title, Text, Link } = Typography;
+const { Title, Link } = Typography;
 const { Content } = Layout;
 
 const DatasetProcessingForm = ({setFile,file}) => {
@@ -25,7 +25,7 @@ const DatasetProcessingForm = ({setFile,file}) => {
     console.log('Form values:', values);
     console.log('CSV Data:', csvData);
     console.log('CSV Headers:', csvHeaders);
-    navigate('/hierarchy', { state: { identifier:values.identifier, quasiIdentifiers: values.quasiIdentifier, sensitiveColumn: values.sensitiveAttribute[0] } });
+    navigate('/hierarchy', { state: { identifier:values.identifier, quasiIdentifiers: values.quasiIdentifier, sensitiveColumn: values.sensitiveAttribute[0],csvHeaders:csvHeaders } });
   };
 
   const handleUpload = (upFile) => {
@@ -66,8 +66,8 @@ const DatasetProcessingForm = ({setFile,file}) => {
       <AppHeader /> 
       <Content style={{ padding: '50px', backgroundColor: '#f0f2f5' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <Title level={1}>Privacy Enhancement Toolbox</Title>
-          <Text type="secondary">Application</Text>
+          <Title level={1}>Application</Title>
+          {/* <Text type="secondary">Application</Text> */}
         </div>
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
           <Title level={3}>Dataset Processing</Title>
@@ -153,11 +153,23 @@ const DatasetProcessingForm = ({setFile,file}) => {
               <Checkbox checked={termsAccepted} onChange={handleTermsChange}>
                 I accept the terms
               </Checkbox>
-              <Link href="#" target="_blank">Read our T&Cs</Link>
+              <Link href="/terms" target="_blank" style={{color:'grey' }}>Read our T&Cs</Link>
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" disabled={!termsAccepted} block>
+            <Button 
+                htmlType="submit" 
+                style={{ 
+                  width: '100%', 
+                  color: 'white', 
+                  backgroundColor: 'black',
+                  transition: 'background-color 0.3s, color 0.3s',
+                }}
+                disabled={!termsAccepted}
+                block
+              >
+
+              {/* <Button type="primary" htmlType="submit" disabled={!termsAccepted} block> */}
                 Submit Processing Info
               </Button>
             </Form.Item>
